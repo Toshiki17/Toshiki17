@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja"><meta charset="utf-8">
+<!-- アプリアイコンの原稿。scripts/render_assets.js が 1024×1024 で書き出す -->
+<link rel="stylesheet" href="../ios/www/fonts.css">
+<style>
+html,body{margin:0;width:1024px;height:1024px;overflow:hidden}
+.bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#EBC985 0%,#E2BD76 45%,#C99D52 100%)}
+.grid{position:absolute;inset:0;
+  background-image:linear-gradient(90deg,rgba(74,55,23,.55) 3px,transparent 3px),linear-gradient(rgba(74,55,23,.55) 3px,transparent 3px);
+  background-size:204.8px 204.8px;background-position:-1.5px -1.5px}
+.file{position:absolute;left:409.6px;width:204.8px;top:0;bottom:0;background:rgba(44,74,120,.16)}
+.piece{position:absolute;left:50%;top:52%;width:560px;height:650px;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 22px 26px rgba(40,26,6,.45))}
+.piece svg{width:100%;height:100%}
+.txt{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:"Shippori Mincho B1";font-weight:800;font-size:215px;line-height:1;color:#1A1410}
+</style>
+<div class="bg"></div><div class="file"></div><div class="grid"></div>
+<div class="piece">
+  <svg viewBox="0 0 560 650"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FAEBC4"/><stop offset="1" stop-color="#EBD39C"/></linearGradient></defs>
+  <path d="M280 8 L470 92 L548 642 L12 642 L90 92 Z" fill="url(#g)" stroke="#9A783A" stroke-width="10" stroke-linejoin="round"/></svg>
+  <div class="txt"><span>飛</span><span>車</span></div>
+</div>
+</html>

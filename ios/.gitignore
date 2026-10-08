@@ -1,0 +1,5 @@
+*.xcodeproj/
+NakabishaDojo/Info.plist
+build/
+DerivedData/
+xcuserdata/

@@ -1,0 +1,47 @@
+# XcodeGen の定義ファイル。`xcodegen generate` で NakabishaDojo.xcodeproj を作る。
+name: NakabishaDojo
+options:
+  bundleIdPrefix: io.github.toshiki17
+  deploymentTarget:
+    iOS: "16.0"
+  developmentLanguage: ja
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Apple Developer の Team ID（10桁）。Xcode の Signing & Capabilities で選んでもよい
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+targets:
+  NakabishaDojo:
+    type: application
+    platform: iOS
+    sources:
+      - path: NakabishaDojo
+      - path: www
+        type: folder
+        buildPhase: resources
+    info:
+      path: NakabishaDojo/Info.plist
+      properties:
+        CFBundleDisplayName: 中飛車道場
+        CFBundleDevelopmentRegion: ja
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.education
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen:
+          UIColorName: AppBackground
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIRequiresFullScreen: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.toshiki17.nakabishadojo
+        PRODUCT_NAME: NakabishaDojo
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: YES

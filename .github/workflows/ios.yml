@@ -1,0 +1,76 @@
+name: iOS
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      upload:
+        description: "App Store Connect（TestFlight）へアップロードする"
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    name: Build (simulator)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Build
+        run: |
+          xcodebuild -version
+          xcodebuild build \
+            -project ios/NakabishaDojo.xcodeproj -scheme NakabishaDojo \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+  upload:
+    name: Archive & upload to App Store Connect
+    if: github.event_name == 'workflow_dispatch' && inputs.upload
+    needs: build
+    runs-on: macos-26
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secrets
+        run: |
+          for v in ASC_KEY_ID ASC_ISSUER_ID TEAM_ID; do
+            [ -n "${!v}" ] || { echo "::error::Secret が未設定です: $v（README の手順を参照）"; exit 1; }
+          done
+      - name: Install App Store Connect API key
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$ASC_KEY_P8" > ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Archive
+        run: |
+          xcodebuild archive \
+            -project ios/NakabishaDojo.xcodeproj -scheme NakabishaDojo \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/NakabishaDojo.xcarchive \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$TEAM_ID" CURRENT_PROJECT_VERSION="${{ github.run_number }}"
+      - name: Export & upload
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/NakabishaDojo.xcarchive \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath build/export \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID"
