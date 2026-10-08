@@ -16,7 +16,7 @@ jobs:
     name: Build (simulator)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Generate Xcode project
         run: |
           brew install xcodegen
@@ -39,7 +39,7 @@ jobs:
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check secrets
         run: |
           for v in ASC_KEY_ID ASC_ISSUER_ID TEAM_ID; do

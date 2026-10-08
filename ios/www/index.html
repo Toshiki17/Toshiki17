@@ -1677,7 +1677,7 @@ function parseKif(text){
     if(/^変化[：:]/.test(line))break;
     const hm=line.match(/^(先手|後手|下手|上手|手合割|開始日時|棋戦|戦型)[：:](.*)$/);if(hm){meta[hm[1]]=hm[2].trim();continue;}
     const mm=line.match(/^(\d+)\s+(.+)$/);if(!mm)continue;
-    let tok=mm[2].replace(/\s*\(\s*[\d:\/\s]+\)\s*$/,'').replace(/[+＋]\s*$/,'').trim();
+    let tok=mm[2].replace(/\s*\(\s*[\d\s]*[:\/][\d:\/\s]*\)\s*$/,'').replace(/[+＋]\s*$/,'').trim();
     if(/^(投了|中断|千日手|詰み|持将棋|切れ負け|反則|入玉|不戦|封じ手)/.test(tok))break;
     let to,rest;
     if(tok[0]==='同'){if(!prevTo){err=`${mm[1]}手目の「同」が読めません。`;break;}to=prevTo;rest=tok.slice(1).replace(/^[\s\u3000]+/,'');}
